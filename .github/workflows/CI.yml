@@ -30,6 +30,11 @@ jobs:
              mv *.tar.gz ../artifacts/ &&
              mv *.deb ../artifacts/ &&
              mv *.rpm ../artifacts/
+      - name: Publish
+        uses: actions/upload-artifact@v2
+        with:
+          name: debrpm
+          path: artifacts/
 
   
       
