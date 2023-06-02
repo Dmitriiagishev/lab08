@@ -1,9 +1,0 @@
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/print.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/package.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/package_source.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/edit_cache.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/rebuild_cache.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/list_install_components.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/install.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/install/local.dir
-/home/dmitrii/Dmitriiagishev/workspace/projects/lab06_1/build/CMakeFiles/install/strip.dir
