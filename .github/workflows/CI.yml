@@ -31,22 +31,5 @@ jobs:
              mv *.deb ../artifacts/ &&
              mv *.rpm ../artifacts/
 
-  build_Windows:
-    runs-on: windows-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Configure Solver
-        run: cmake -B_build -DCPACK_GENERATOR="ZIP"
-
-      - name: Build Solver
-        run: cmake --build _build --target package
-
-      - name: Make Solver Package
-        run: cd _build && cpack -G "DEB" &&
-             mkdir ../artifacts &&
-             mv *.tar.gz ../artifacts/ &&
-             mv *.deb ../artifacts/ &&
-
+  
       
