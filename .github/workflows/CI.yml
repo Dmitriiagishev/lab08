@@ -3,8 +3,12 @@ name: CMake
 on:
   push:
     branches: [main]
+    tags: -"v*1.*"
   pull_request:
     branches: [main]
+    
+env:
+  BUILD_TYPE: Release
 
 jobs:
   build_Linux:
@@ -14,10 +18,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Configure Solver
-        run: cmake ${{github.workspace}}/solver_application/ -B ${{github.workspace}}/solver_application/build -DCPACK_GENERATOR="TGZ"
+        run: cmake -H. -B_build -DCPACK_GENERATOR="TGZ"
 
       - name: Build Solver
-        run: cmake --build ${{github.workspace}}/solver_application/build --target package
+        run: cmake --build _build --target package
 
       - name: Make Solver Package
         run: cd _build && cpack -G "DEB" &&
@@ -34,10 +38,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Configure Solver
-        run: cmake ${{github.workspace}}/solver_application/ -B ${{github.workspace}}/solver_application/build -DCPACK_GENERATOR="ZIP"
+        run: cmake -H. -B_build -DCPACK_GENERATOR="ZIP"
 
       - name: Build Solver
-        run: cmake --build ${{github.workspace}}/solver_application/build
+        run: cmake --build _build --target package
 
       - name: Make Solver Package
         run: cd _build && cpack -G "DEB" &&
