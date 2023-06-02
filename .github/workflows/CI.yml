@@ -14,16 +14,18 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Configure Solver
-        run: cmake ${{github.workspace}}/solver_application/ -B ${{github.workspace}}/solver_application/build
+        run: cmake ${{github.workspace}}/solver_application/ -B ${{github.workspace}}/solver_application/build -DCPACK_GENERATOR="TGZ"
 
       - name: Build Solver
-        run: cmake --build ${{github.workspace}}/solver_application/build
+        run: cmake --build ${{github.workspace}}/solver_application/build --target package
 
-      - name: Configure HelloWorld
-        run: cmake ${{github.workspace}}/hello_world_application/ -B ${{github.workspace}}/hello_world_application/build
-
-      - name: Build HelloWorld
-        run: cmake --build ${{github.workspace}}/hello_world_application/build
+      - name: Make Solver Package
+        run: cd _build && cpack -G "DEB" &&
+             cpack -G "RPM" &&
+             mkdir ../artifacts &&
+             mv *.tar.gz ../artifacts/ &&
+             mv *.deb ../artifacts/ &&
+             mv *.rpm ../artifacts/
 
   build_Windows:
     runs-on: windows-latest
@@ -32,13 +34,17 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Configure Solver
-        run: cmake ${{github.workspace}}/solver_application/ -B ${{github.workspace}}/solver_application/build
+        run: cmake ${{github.workspace}}/solver_application/ -B ${{github.workspace}}/solver_application/build -DCPACK_GENERATOR="ZIP"
 
       - name: Build Solver
         run: cmake --build ${{github.workspace}}/solver_application/build
 
-      - name: Configure HelloWorld
-        run: cmake ${{github.workspace}}/hello_world_application/ -B ${{github.workspace}}/hello_world_application/build
+      - name: Make Solver Package
+        run: cd _build && cpack -G "DEB" &&
+             cpack -G "RPM" &&
+             mkdir ../artifacts &&
+             mv *.tar.gz ../artifacts/ &&
+             mv *.deb ../artifacts/ &&
+             mv *.rpm ../artifacts/
 
-      - name: Build HelloWorld
-        run: cmake --build ${{github.workspace}}/hello_world_application/build
+      
