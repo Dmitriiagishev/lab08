@@ -1,37 +1,167 @@
-# lab06
-# Копирование репозитория из предыдущей работы
+## Laboratory work VIII
+
+Данная лабораторная работа посвещена изучению систем автоматизации развёртывания и управления приложениями на примере **Docker**
+
 ```sh
-dmitrii@DESKTOP-9P3LE74:~/Dmitriiagishev/workspace/projects/lab041$ git clone https://github.com/Dmitriiagishev/lab04.git
-Cloning into 'lab04'...
-remote: Enumerating objects: 291, done.
-remote: Counting objects: 100% (62/62), done.
-remote: Compressing objects: 100% (48/48), done.
-remote: Total 291 (delta 21), reused 32 (delta 9), pack-reused 229
-Receiving objects: 100% (291/291), 114.66 KiB | 221.00 KiB/s, done.
-Resolving deltas: 100% (145/145), done.
+$ open https://docs.docker.com/get-started/
 ```
-# Создание файла CPackConfig.cmake
+
+## Tasks
+
+- [ ] 1. Создать публичный репозиторий с названием **lab08** на сервисе **GitHub**
+- [ ] 2. Ознакомиться со ссылками учебного материала
+- [ ] 3. Выполнить инструкцию учебного материала
+- [ ] 4. Составить отчет и отправить ссылку личным сообщением в **Slack**
+
+## Tutorial
+
 ```sh
-include(InstallRequiredSystemLibraries)
+$ export GITHUB_USERNAME=<имя_пользователя>
+```
 
-set(CPACK_PACKAGE_CONTACT donotdisturb@yandex.ru)
-set(CPACK_PACKAGE_VERSION_MAJOR ${PRINT_VERSION_MAJOR})
-set(CPACK_PACKAGE_VERSION_MINOR ${PRINT_VERSION_MINOR})
-set(CPACK_PACKAGE_VERSION_PATCH ${PRINT_VERSION_PATCH})
-set(CPACK_PACKAGE_VERSION_TWEAK ${PRINT_VERSION_TWEAK})
-set(CPACK_PACKAGE_VERSION ${PRINT_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "static C++ library for printing")
+```
+$ cd ${GITHUB_USERNAME}/workspace
+$ pushd .
+$ source scripts/activate
+```
 
-set(CPACK_RESOURCE_FILE_README \${CMAKE_CURRENT_SOURCE_DIR}/README.md)
+```sh
+$ git clone https://github.com/${GITHUB_USERNAME}/lab07 lab08
+$ cd lab08
+$ git submodule update --init
+$ git remote remove origin
+$ git remote add origin https://github.com/${GITHUB_USERNAME}/lab08
+```
 
-set(CPACK_RPM_PACKAGE_NAME "solver")
-set(CPACK_RPM_PACKAGE_LICENSE "MIT")
-set(CPACK_RPM_PACKAGE_GROUP "print-solver")
-set(CPACK_RPM_PACKAGE_VERSION CPACK_PACKAGE_VERSION)
+```sh
+$ cat > Dockerfile <<EOF
+FROM ubuntu:18.04
+EOF
+```
 
-set(CPACK_DEBIAN_PACKAGE_NAME "solver")
-set(CPACK_DEBIAN_PACKAGE_PREDEPENDS "cmake >= 3.0")
-set(CPACK_DEBIAN_PACKAGE_VERSION CPACK_PACKAGE_VERSION)
+```sh
+$ cat >> Dockerfile <<EOF
 
-include(CPack)
+RUN apt update
+RUN apt install -yy gcc g++ cmake
+EOF
+```
+
+```sh
+$ cat >> Dockerfile <<EOF
+
+COPY . print/
+WORKDIR print
+EOF
+```
+
+```sh
+$ cat >> Dockerfile <<EOF
+
+RUN cmake -H. -B_build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=_install
+RUN cmake --build _build
+RUN cmake --build _build --target install
+EOF
+```
+
+```sh
+$ cat >> Dockerfile <<EOF
+
+ENV LOG_PATH /home/logs/log.txt
+EOF
+```
+
+```sh
+$ cat >> Dockerfile <<EOF
+
+VOLUME /home/logs
+EOF
+```
+
+```sh
+$ cat >> Dockerfile <<EOF
+
+WORKDIR _install/bin
+EOF
+```
+
+```sh
+$ cat >> Dockerfile <<EOF
+
+ENTRYPOINT ./demo
+EOF
+```
+
+```sh
+$ docker build -t logger .
+```
+
+```sh
+$ docker images
+```
+
+```sh
+$ mkdir logs
+$ docker run -it -v "$(pwd)/logs/:/home/logs/" logger
+text1
+text2
+text3
+<C-D>
+```
+
+```sh
+$ docker inspect logger
+```
+
+```sh
+$ cat logs/log.txt
+```
+
+```sh
+$ gsed -i 's/lab07/lab08/g' README.md
+```
+
+```sh
+$ vim .travis.yml
+/lang<CR>o
+services:
+- docker<ESC>
+jVGdo
+script:
+- docker build -t logger .<ESC>
+:wq
+```
+
+```sh
+$ git add Dockerfile
+$ git add .travis.yml
+$ git commit -m"adding Dockerfile"
+$ git push origin master
+```
+
+```sh
+$ travis login --auto
+$ travis enable
+```
+
+## Report
+
+```sh
+$ popd
+$ export LAB_NUMBER=08
+$ git clone https://github.com/tp-labs/lab${LAB_NUMBER} tasks/lab${LAB_NUMBER}
+$ mkdir reports/lab${LAB_NUMBER}
+$ cp tasks/lab${LAB_NUMBER}/README.md reports/lab${LAB_NUMBER}/REPORT.md
+$ cd reports/lab${LAB_NUMBER}
+$ edit REPORT.md
+$ gist REPORT.md
+```
+
+## Links
+
+- [Book](https://www.dockerbook.com)
+- [Instructions](https://docs.docker.com/engine/reference/builder/)
+
+```
+Copyright (c) 2015-2021 The ISC Authors
 ```
